@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Django App{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <!-- Górny pasek nawigacyjny -->
+    <nav class="navbar">
+        <div class="navbar-left">
+            <a href="{% url 'home' %}" class="nav-link">Home</a>
+        </div>
+        <div class="navbar-right">
+            <form method="post" action="{% url 'logout' %}" class="logout-form">
+                {% csrf_token %}
+                <button type="submit" class="logout-button">Logout</button>
+            </form>
+        </div>
+    </nav>
+
+    <hr>
+
+    <!-- Główna zawartość strony -->
+    <main class="content">
+        {% block content %}
+        {% endblock %}
+    </main>
+</body>
+</html>

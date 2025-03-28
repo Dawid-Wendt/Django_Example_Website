@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}View Specific User{% endblock %}
+
+{% block content %}
+<h1>View Specific User</h1>
+
+<!-- Formularz wyboru użytkownika -->
+<form method="get" action="">
+    <label for="user_id">Select User:</label>
+    <select id="user_id" name="user_id">
+        <option value="">-- Select User --</option>
+        {% for user in users %}
+            <option value="{{ user.id }}" {% if user.id|stringformat:"s" == user_filter %}selected{% endif %}>
+                {{ user.name }} {{ user.surname }}
+            </option>
+        {% endfor %}
+    </select>
+    <label for="date">Filter by Date:</label>
+    <input type="date" id="date" name="date" value="{{ date_filter }}">
+    <button type="submit">Show Details</button>
+</form>
+
+{% if user_details %}
+    <h2>User Information:</h2>
+    <p><strong>Name:</strong> {{ user_details.name }} {{ user_details.surname }}</p>
+    <p><strong>Email:</strong> {{ user_details.email }}</p>
+
+    <h3>Roles:</h3>
+    <ul>
+        {% for role in user_roles %}
+            <li>{{ role.role_id.name }}</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Permissions:</h3>
+    <ul>
+        {% for permission in user_permissions %}
+            <li>{{ permission.gate_id.name }}</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Access Records:</h3>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Gate</th>
+                <th>Date</th>
+                <th>Access</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in user_access %}
+                <tr>
+                    <td>{{ record.gate_id.name }}</td>
+                    <td>{{ record.data|date:"Y-m-d H:i" }}</td>
+                    <td>{{ record.access }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="3">No records found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h3>Cards:</h3>
+    <ul>
+        {% for card in user_cards %}
+            <li>{{ card.rfid_id }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Please select a user to view their details.</p>
+{% endif %}
+<a href="{% url 'home' %}">Back to Home</a>
+{% endblock %}

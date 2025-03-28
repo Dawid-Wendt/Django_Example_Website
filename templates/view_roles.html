@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}View Roles{% endblock %}
+
+{% block content %}
+<h1>Roles Overview</h1>
+
+<!-- Formularz wyboru roli -->
+<form method="get" action="">
+    <label for="role_id">Select Role:</label>
+    <select id="role_id" name="role_id">
+        <option value="">-- Select Role --</option>
+        {% for role in roles %}
+            <option value="{{ role.id }}" {% if role.id|stringformat:"s" == role_filter %}selected{% endif %}>
+                {{ role.name }}
+            </option>
+        {% endfor %}
+    </select>
+    <button type="submit">Filter</button>
+</form>
+
+{% if role_filter %}
+    <h2>Users in Role: {{ role_name }}</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users_in_role %}
+                <tr>
+                    <td>{{ user.employee_id.name }} {{ user.employee_id.surname }}</td>
+                    <td>{{ user.employee_id.email }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="2">No users found for this role.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Gates Accessible for Role: {{ role_name }}</h2>
+    <ul>
+        {% for permission in permissions %}
+            <li>{{ permission.gate_id.name }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+<a href="{% url 'home' %}">Back to Home</a>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Manager Dashboard{% endblock %}
+
+{% block content %}
+<h1>Manager Dashboard</h1>
+<p>Welcome, {{ user.get_full_name }}!</p>
+
+<!-- Przycisk do widoku Accesses -->
+<a href="{% url 'view_accesses' %}" style="text-decoration: none; padding: 10px; background-color: lightblue; border: 1px solid gray; border-radius: 5px;">
+    View Accesses
+</a>
+
+<!-- Przycisk do widoku konkretnego użytkownika -->
+<a href="{% url 'view_specific_user' %}" style="text-decoration: none; padding: 10px; background-color: lightgreen; border: 1px solid gray; border-radius: 5px;">
+    View Specific User
+</a>
+
+<!-- Przycisk do widoku ról -->
+<a href="{% url 'view_roles' %}" style="text-decoration: none; padding: 10px; background-color: lightcoral; border: 1px solid gray; border-radius: 5px;">
+    View Roles
+</a>
+{% endblock %}

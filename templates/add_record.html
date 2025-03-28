@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load custom_tags %}
+{% block title %}Add Record to {{ table_name }}{% endblock %}
+
+{% block content %}
+<h1>Add New Record to {{ table_name }}</h1>
+<form method="post">
+    {% csrf_token %}
+    {% for field in fields %}
+        <label for="{{ field.name }}">{{ field.verbose_name }}:</label>
+        {% if field.type == "CharField" or field.type == "TextField" %}
+            <input type="text" name="{{ field.name }}" id="{{ field.name }}">
+        {% elif field.type == "IntegerField" or field.type == "FloatField" %}
+            <input type="number" name="{{ field.name }}" id="{{ field.name }}">
+        {% elif field.type == "DateTimeField" %}
+            <input type="datetime-local" name="{{ field.name }}" id="{{ field.name }}">
+        {% elif field.type == "DateField" %}
+            <input type="date" name="{{ field.name }}" id="{{ field.name }}">
+        {% elif field.type == "BooleanField" %}
+            <input type="hidden" name="{{ field.name }}" value="false">
+            <input type="checkbox" name="{{ field.name }}" id="{{ field.name }}" value="true">
+        {% elif field.choices %}
+            <select name="{{ field.name }}" id="{{ field.name }}">
+                <option value="" disabled selected>-- Select --</option>
+                {% for choice in field.choices %}
+                    <option value="{{ choice.pk }}">{{ choice }}</option>
+                {% endfor %}
+            </select>
+        {% else %}
+            <input type="text" name="{{ field.name }}" id="{{ field.name }}">
+        {% endif %}
+        <br>
+    {% endfor %}
+    <button type="submit">Save</button>
+</form>
+<a href="{% url 'view_table' table_name=table_name %}">Cancel</a>
+{% endblock %}

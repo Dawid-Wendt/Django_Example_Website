@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load custom_tags %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h1>Welcome to the Dashboard</h1>
+<h2>Your Role: {{ user_role }}</h2>
+<h3>Available Tables</h3>
+<ul>
+    {% for table in tables %}
+        <li>
+            <a href="{% url table.url table.params.table_name %}">
+                {{ table.name }}
+            </a>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

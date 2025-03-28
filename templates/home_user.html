@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h1>Your Dashboard</h1>
+
+<!-- Dane użytkownika -->
+<h2>Your Details:</h2>
+<p><strong>Name:</strong> {{ employee.name }} {{ employee.surname }}</p>
+<p><strong>Email:</strong> {{ employee.email }}</p>
+<p><strong>Roles:</strong> {{ roles|join:", " }}</p>
+
+<!-- Dostępne bramki -->
+<h2>Accessible Gates:</h2>
+<ul>
+    {% for permission in permissions %}
+        <li>{{ permission.gate_id.name }}</li>
+    {% empty %}
+        <li>No accessible gates.</li>
+    {% endfor %}
+</ul>
+
+<!-- Tabela Access z filtrowaniem -->
+<h2>Your Access Records:</h2>
+<form method="get" action="">
+    <label for="date">Filter by Date:</label>
+    <input type="date" id="date" name="date" value="{{ date_filter }}">
+    <button type="submit">Filter</button>
+</form>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Gate</th>
+            <th>Date</th>
+            <th>Access</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for record in access_records %}
+            <tr>
+                <td>{{ record.gate_id.name }}</td>
+                <td>{{ record.data|date:"Y-m-d H:i" }}</td>
+                <td>{{ record.access }}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="3">No records found.</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

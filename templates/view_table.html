@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load custom_tags %}
+{% block title %}View {{ table_name }}{% endblock %}
+
+{% block content %}
+<h1>{{ table_name }}</h1>
+<table border="1">
+    <thead>
+        <tr>
+            {% for field in fields %}
+                <th>{{ field }}</th>
+            {% endfor %}
+            {% if user.role == 0 %}
+                <th>Edit</th>
+                <th>Delete</th>
+            {% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in data %}
+            <tr>
+                {% for field in fields %}
+                    <td>{{ row|attr:field }}</td>
+                {% endfor %}
+                {% if user.role == 0 %}
+                    <td>
+                        <a href="{% url 'edit_table' table_name=table_name object_id=row.id %}">Edit</a>
+                    </td>
+                    <td>
+                        <form method="post" action="{% url 'view_table' table_name=table_name %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="delete_id" value="{{ row.id }}">
+                            <button type="submit" style="color:{% if table_name == 'Accounts' and row.id == user.id %}gray{% else %}red{% endif %};" 
+                                    {% if table_name == "Accounts" and row.id == user.id %}disabled{% endif %}>
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if user.role == 0 %}
+    {% if table_name == "Accounts"%}
+        <a href="{% url 'create_user' %}">Create Account</a>
+    {% else %}
+        <a href="{% url 'add_record' table_name=table_name %}">Add Record</a>
+    {% endif %}
+{% endif %}
+<a href="{% url 'home' %}">Back to Home</a>
+{% endblock %}
